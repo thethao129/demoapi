@@ -6,8 +6,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 @Entity
 @Table(name = "account")
 public class Account {
@@ -16,25 +14,25 @@ public class Account {
 	private long accountNumber;
 
 	private long balance;
-	
+
 	private String firstname;
-	
+
 	private String lastname;
-	
+
 	private int age;
-	
+
 	private String gender;
-	
+
 	private String address;
-	
+
 	private String employer;
-	
+
 	private String email;
-	
+
 	private String city;
-	
+
 	private String state;
-	
+
 	private String password;
 
 	public long getAccountNumber() {
@@ -132,14 +130,13 @@ public class Account {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
 
 	public Account() {
 		super();
 	}
 
-	public Account(long accountNumber,
-			String address, int age, long balance, String city, String email, String employer, String firstname, String gender, String lastname, String state) {
+	public Account(long accountNumber, String address, int age, long balance, String city, String email,
+			String employer, String firstname, String gender, String lastname, String state) {
 		super();
 		this.accountNumber = accountNumber;
 		this.balance = balance;

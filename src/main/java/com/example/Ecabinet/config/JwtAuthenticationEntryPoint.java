@@ -12,7 +12,6 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 
 @Component
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint, Serializable {
-		
 
 	/**
 	 * 
@@ -23,6 +22,6 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint, Se
 	public void commence(HttpServletRequest request, HttpServletResponse response,
 			AuthenticationException authException) throws IOException {
 
-		response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "?????????");
+		response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token Error");
 	}
-}	
+}

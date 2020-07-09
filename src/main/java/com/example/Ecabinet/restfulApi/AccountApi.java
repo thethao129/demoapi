@@ -35,57 +35,45 @@ import io.swagger.annotations.ApiResponses;
 
 @CrossOrigin(origins = "*")
 @RestController
-@Api(value="onlinestore", description="Operations pertaining to account in Online Store")
+@Api(value = "onlinestore", description = "Operations pertaining to account in Online Store")
 public class AccountApi {
-	
+
 	@Autowired
 	PasswordEncoder passwordEncoder;
-	
+
 	@Autowired
 	AccountDao accountDao;
-	
+
 	@Autowired
-    AuthenticationManager authenticationManager;
+	AuthenticationManager authenticationManager;
 
-    @Autowired
-    private JWTutil jwtUtil;
-	
-	@ApiOperation(value = "View a list of available products",response = Iterable.class)
-    @ApiResponses(value = {
-    		@ApiResponse(code = 201, message = "Successfully create"),
-            @ApiResponse(code = 200, message = "Successfully retrieved list"),
-            @ApiResponse(code = 401, message = "You are not authorized to view the resource"),
-            @ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
-            @ApiResponse(code = 404, message = "The resource you were trying to reach is not found")
-    })
+	@Autowired
+	private JWTutil jwtUtil;
 
-	//@ApiOperation(value = "Search a account with an ID",response = Account.class)
-	@GetMapping(value = "/api/get/account/{id}",produces = "application/json")
-	public Account getAccountById(@PathVariable(value = "id") long id) {
+	@ApiOperation(value = "View a list of available products", response = Iterable.class)
+	@ApiResponses(value = { @ApiResponse(code = 201, message = "Successfully create"),
+			@ApiResponse(code = 200, message = "Successfully retrieved list"),
+			@ApiResponse(code = 401, message = "You are not authorized to view the resource"),
+			@ApiResponse(code = 403, message = "Accessing the resource you were trying to reach is forbidden"),
+			@ApiResponse(code = 404, message = "The resource you were trying to reach is not found") })
+
+	// @ApiOperation(value = "Search a account with an ID",response = Account.class)
+	@GetMapping(value = "/api/get/account/{id}", produces = "application/json")
+	public ResponseEntity<?> getAccountById(@PathVariable(value = "id") long id) {
 		Account account;
 		account = accountDao.getAccountById(id);
-		return account;
+		return new ResponseEntity<>(account, HttpStatus.OK);
 	}
-	
+
 	@PostMapping(value = "/api/login")
 	public ResponseEntity<?> login(@RequestBody User user) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        user.getUsername(),
-                        user.getPassword()
-                )
-        );
+		Authentication authentication = authenticationManager
+				.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+		SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        String jwt = jwtUtil.generateToken((CurrentUser) authentication.getPrincipal());
-        return new ResponseEntity<>(new JwtResponse(jwt), HttpStatus.OK);
-	}
-	
-	@PostMapping(value = "/api/logout")
-	public ResponseEntity<?> logout() {
-     
-        return new ResponseEntity<>(new JwtResponse(), HttpStatus.OK);
+		String jwt = jwtUtil.generateToken((CurrentUser) authentication.getPrincipal());
+		return new ResponseEntity<>(new JwtResponse(jwt), HttpStatus.OK);
 	}
 
 	@PostMapping(value = "/api/create/account", produces = "application/json")
@@ -99,33 +87,33 @@ public class AccountApi {
 	}
 
 	@GetMapping(value = "/api/getAll/account", produces = "application/json")
-	public List<Account> getAccountAll() {
+	public ResponseEntity<?> getAccountAll() {
 
 		List<Account> account = accountDao.getAll();
-		return account;
+		return new ResponseEntity<>(account, HttpStatus.OK);
 	}
-	
+
 	@ApiOperation(value = "Delete a product")
-    @RequestMapping(value="/api/delete/account/{id}", method = RequestMethod.DELETE, produces = "application/json")
-    public ResponseEntity delete(@PathVariable long id){
-        accountDao.deleteAccount(id);;
-        return new ResponseEntity("Product deleted successfully", HttpStatus.OK);
-    }
-	
+	@RequestMapping(value = "/api/delete/account/{id}", method = RequestMethod.DELETE, produces = "application/json")
+	public ResponseEntity<?> delete(@PathVariable long id) {
+		accountDao.deleteAccount(id);
+		;
+		return new ResponseEntity<>("Product deleted successfully", HttpStatus.OK);
+	}
+
 	@ApiOperation(value = "Update a product")
-    @RequestMapping(value = "/api/update/account/{id}", method = RequestMethod.PUT, produces = "application/json")
-    public Account updateProduct(@PathVariable long id, @RequestBody Account acc){
-        acc.setAccountNumber(id);
-        accountDao.editAccount(acc);
-        return accountDao.getAccountById(id);
-    }
-	
+	@RequestMapping(value = "/api/update/account/{id}", method = RequestMethod.PUT, produces = "application/json")
+	public Account updateProduct(@PathVariable long id, @RequestBody Account acc) {
+		acc.setAccountNumber(id);
+		accountDao.editAccount(acc);
+		return accountDao.getAccountById(id);
+	}
+
 	@PostMapping(value = "/api/getAllByObject/account", produces = "application/json")
-	public List<Account> getAccountAllByAccount(@RequestBody Account account) {
+	public ResponseEntity<?> getAccountAllByAccount(@RequestBody Account account) {
 
 		List<Account> listAcc = accountDao.getAllByAccount(account);
-		return listAcc;
+		return new ResponseEntity<>(listAcc, HttpStatus.OK);
 	}
-
 
 }

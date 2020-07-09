@@ -18,19 +18,16 @@ public class CurrentUser extends User {
 		super(username, password, authorities);
 		// TODO Auto-generated constructor stub
 	}
-	
 
 	public String getFirstName() {
 		return firstName;
 	}
-
 
 	@Override
 	public Collection<GrantedAuthority> getAuthorities() {
 		// TODO Auto-generated method stub
 		return Collections.singleton(new SimpleGrantedAuthority("ROLE_ADMIN"));
 	}
-
 
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;

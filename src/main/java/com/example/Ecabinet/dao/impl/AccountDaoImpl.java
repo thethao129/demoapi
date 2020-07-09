@@ -22,8 +22,8 @@ import com.example.Ecabinet.entity.CurrentUser;
 
 @Repository
 @Transactional
-public class AccountDaoImpl implements AccountDao,UserDetailsService{
-	
+public class AccountDaoImpl implements AccountDao, UserDetailsService {
+
 	@PersistenceContext
 	EntityManager entityManager;
 
@@ -35,13 +35,13 @@ public class AccountDaoImpl implements AccountDao,UserDetailsService{
 
 	@Override
 	public void deleteAccount(long id) {
-		
+
 		System.out.println("-- delete account by id --");
-        Query query = entityManager.createQuery("DELETE FROM Account a WHERE a.accountNumber = :aid ");
-        query.setParameter("aid", id);
-        int rowsDeleted = query.executeUpdate();
-        System.out.println("entities deleted: " + rowsDeleted);
-        
+		Query query = entityManager.createQuery("DELETE FROM Account a WHERE a.accountNumber = :aid ");
+		query.setParameter("aid", id);
+		int rowsDeleted = query.executeUpdate();
+		System.out.println("entities deleted: " + rowsDeleted);
+
 	}
 
 	@Override
@@ -50,9 +50,9 @@ public class AccountDaoImpl implements AccountDao,UserDetailsService{
 		try {
 			String jpql = "SELECT NEW Account(a.accountNumber, a.address, a.age, a.balance, a.city, a.email, a.employer, a.firstname, a.gender, a.lastname, a.state)  FROM Account AS a WHERE a.accountNumber LIKE :aid ";
 			Query query = entityManager.createQuery(jpql);
-			query.setParameter("aid",  id );
-			return (Account)query.getSingleResult();
-		}catch (Exception e) {
+			query.setParameter("aid", id);
+			return (Account) query.getSingleResult();
+		} catch (Exception e) {
 			// TODO: handle exception
 			System.out.print(e);
 			return null;
@@ -65,7 +65,7 @@ public class AccountDaoImpl implements AccountDao,UserDetailsService{
 			String jpql = "SELECT NEW Account(a.accountNumber, a.address, a.age, a.balance, a.city, a.email, a.employer, a.firstname, a.gender, a.lastname, a.state) FROM  Account AS a ";
 			Query query = entityManager.createQuery(jpql);
 			return query.getResultList();
-		}catch (Exception e) {
+		} catch (Exception e) {
 			// TODO: handle exception
 			System.out.print(e);
 			return null;
@@ -81,58 +81,58 @@ public class AccountDaoImpl implements AccountDao,UserDetailsService{
 	@Override
 	public List<Account> getAllByAccount(Account acc) {
 		String jpql = "SELECT NEW Account(a.accountNumber, a.address, a.age, a.balance, a.city, a.email, a.employer, a.firstname, a.gender, a.lastname, a.state) FROM Account AS a WHERE 1=1 ";
-		if(acc.getAddress() !=null) {
-			jpql=jpql.concat(" AND LOWER(a.address) LIKE :add");
+		if (acc.getAddress() != null) {
+			jpql = jpql.concat(" AND LOWER(a.address) LIKE :add");
 		}
-		if(acc.getCity()!=null){
-			jpql=jpql.concat(" AND LOWER(a.city) LIKE :acity");
+		if (acc.getCity() != null) {
+			jpql = jpql.concat(" AND LOWER(a.city) LIKE :acity");
 		}
-		if(acc.getEmail()!=null) {
-			jpql=jpql.concat(" AND LOWER(a.email) LIKE :aemail");
+		if (acc.getEmail() != null) {
+			jpql = jpql.concat(" AND LOWER(a.email) LIKE :aemail");
 		}
-		if(acc.getFirstname()!=null) {
-			jpql=jpql.concat(" AND LOWER(a.firstname) LIKE :afirstname");
+		if (acc.getFirstname() != null) {
+			jpql = jpql.concat(" AND LOWER(a.firstname) LIKE :afirstname");
 		}
-		if(acc.getLastname()!=null) {
-			jpql=jpql.concat(" AND LOWER(a.lastname) LIKE :alastname");
+		if (acc.getLastname() != null) {
+			jpql = jpql.concat(" AND LOWER(a.lastname) LIKE :alastname");
 		}
-		
+
 		Query query = entityManager.createQuery(jpql);
-		
-		if(acc.getAddress() !=null) {
-			query.setParameter("add", "%"+acc.getAddress().toLowerCase()+"%");
+
+		if (acc.getAddress() != null) {
+			query.setParameter("add", "%" + acc.getAddress().toLowerCase() + "%");
 		}
-		if(acc.getCity()!=null){
-			query.setParameter("acity", "%"+acc.getCity().toLowerCase()+"%");
+		if (acc.getCity() != null) {
+			query.setParameter("acity", "%" + acc.getCity().toLowerCase() + "%");
 		}
-		if(acc.getEmail()!=null) {
-			query.setParameter("aemail", "%"+acc.getEmail().toLowerCase()+"%");
+		if (acc.getEmail() != null) {
+			query.setParameter("aemail", "%" + acc.getEmail().toLowerCase() + "%");
 		}
-		if(acc.getFirstname()!=null) {
-			query.setParameter("afirstname", "%"+acc.getFirstname().toLowerCase()+"%");
+		if (acc.getFirstname() != null) {
+			query.setParameter("afirstname", "%" + acc.getFirstname().toLowerCase() + "%");
 		}
-		if(acc.getLastname()!=null) {
-			query.setParameter("alastname", "%"+acc.getLastname().toLowerCase()+"%");
+		if (acc.getLastname() != null) {
+			query.setParameter("alastname", "%" + acc.getLastname().toLowerCase() + "%");
 		}
-		
+
 		return query.getResultList();
 	}
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		
+
 		Account acc = getAllByEmail(username);
-		if(acc==null) {
+		if (acc == null) {
 			throw new UsernameNotFoundException("not found");
 		}
 		Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
-		 grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
-        CurrentUser currentUser=new CurrentUser(username, acc.getPassword(), grantedAuthorities);
-        currentUser.setAccountNumber(acc.getAccountNumber());
+		grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+		CurrentUser currentUser = new CurrentUser(username, acc.getPassword(), grantedAuthorities);
+		currentUser.setAccountNumber(acc.getAccountNumber());
 		currentUser.setFirstName(acc.getFirstname());
 		currentUser.setLastName(acc.getLastname());
-		return  currentUser;
-		
+		return currentUser;
+
 	}
 
 	@Override
@@ -140,16 +140,13 @@ public class AccountDaoImpl implements AccountDao,UserDetailsService{
 		try {
 			String jpql = "SELECT a FROM Account a WHERE a.email LIKE :aemail ";
 			Query query = entityManager.createQuery(jpql);
-			query.setParameter("aemail",  email );
+			query.setParameter("aemail", email);
 			return (Account) query.getSingleResult();
-		}catch (Exception e) {
+		} catch (Exception e) {
 			// TODO: handle exception
 			System.out.print(e);
 			return null;
 		}
 	}
-
-	
-	
 
 }
