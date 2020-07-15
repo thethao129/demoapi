@@ -1,10 +1,8 @@
 package com.example.Ecabinet.entity;
 
 import java.util.Collection;
-import java.util.Collections;
 
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
 public class CurrentUser extends User {
@@ -21,12 +19,6 @@ public class CurrentUser extends User {
 
 	public String getFirstName() {
 		return firstName;
-	}
-
-	@Override
-	public Collection<GrantedAuthority> getAuthorities() {
-		// TODO Auto-generated method stub
-		return Collections.singleton(new SimpleGrantedAuthority("ROLE_ADMIN"));
 	}
 
 	public void setFirstName(String firstName) {

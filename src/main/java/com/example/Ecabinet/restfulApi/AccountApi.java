@@ -102,7 +102,7 @@ public class AccountApi {
 	}
 
 	@ApiOperation(value = "Update a product")
-	@RequestMapping(value = "/api/update/account/{id}", method = RequestMethod.PUT, produces = "application/json")
+	@RequestMapping(value = "/api/update/account/{id}", method = RequestMethod.POST, produces = "application/json")
 	public Account updateProduct(@PathVariable long id, @RequestBody Account acc) {
 		acc.setAccountNumber(id);
 		accountDao.editAccount(acc);

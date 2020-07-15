@@ -11,5 +11,5 @@ public interface AccountDao {
 	public Account getAccountById(long id);
 	public List<Account> getAll();
 	public List<Account> getAllByAccount(Account acc);
-	public Account getAllByEmail(String email);
+	public Account getAccountByEmail(String email);
 }

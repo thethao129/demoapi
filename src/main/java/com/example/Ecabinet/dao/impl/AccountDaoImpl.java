@@ -48,7 +48,7 @@ public class AccountDaoImpl implements AccountDao, UserDetailsService {
 	public Account getAccountById(long id) {
 		// TODO Auto-generated method stub
 		try {
-			String jpql = "SELECT NEW Account(a.accountNumber, a.address, a.age, a.balance, a.city, a.email, a.employer, a.firstname, a.gender, a.lastname, a.state)  FROM Account AS a WHERE a.accountNumber LIKE :aid ";
+			String jpql = "SELECT NEW Account(a.accountNumber, a.address, a.age, a.balance, a.city, a.email, a.employer, a.firstname, a.gender, a.lastname, a.state, a.role)  FROM Account AS a WHERE a.accountNumber LIKE :aid ";
 			Query query = entityManager.createQuery(jpql);
 			query.setParameter("aid", id);
 			return (Account) query.getSingleResult();
@@ -62,7 +62,7 @@ public class AccountDaoImpl implements AccountDao, UserDetailsService {
 	@Override
 	public List<Account> getAll() {
 		try {
-			String jpql = "SELECT NEW Account(a.accountNumber, a.address, a.age, a.balance, a.city, a.email, a.employer, a.firstname, a.gender, a.lastname, a.state) FROM  Account AS a ";
+			String jpql = "SELECT NEW Account(a.accountNumber, a.address, a.age, a.balance, a.city, a.email, a.employer, a.firstname, a.gender, a.lastname, a.state, a.role) FROM  Account AS a ";
 			Query query = entityManager.createQuery(jpql);
 			return query.getResultList();
 		} catch (Exception e) {
@@ -74,13 +74,30 @@ public class AccountDaoImpl implements AccountDao, UserDetailsService {
 
 	@Override
 	public void editAccount(Account account) {
-		// TODO Auto-generated method stub
-		entityManager.merge(account);
+		String jpql = "update Account a set  a.address = ?1, a.age = ?2, a.balance = ?3, a.city = ?4, a.email = ?5, "
+				+ "a.employer= ?6, a.firstname = ?7, a.gender = ?8, a.lastname = ?9, a.state = ?10, a.role = ?11  where a.accountNumber = ?12";
+//		String jpql = "update Account a set a.accountNumber = :accNum, a.address = :add, a.age = :age, a.balance = :balance, a.city = :city, a.email = :email, "
+//				+ "a.employer= :employee, a.firstname = :first, a.gender = :gender, a.lastname = :last, a.state = :state where a.accountNumber = :accid";
+		Query query = entityManager.createQuery(jpql);
+		query.setParameter(1, account.getAddress());
+		query.setParameter(2, account.getAge());
+		query.setParameter(3, account.getBalance());
+		query.setParameter(4, account.getCity());
+		query.setParameter(5, account.getEmail());
+		query.setParameter(6, account.getEmployer());
+		query.setParameter(7, account.getFirstname());
+		query.setParameter(8, account.getGender());
+		query.setParameter(9, account.getLastname());
+		query.setParameter(10, account.getState());
+		query.setParameter(11, account.getRole());
+		query.setParameter(12, account.getAccountNumber());
+		query.executeUpdate();
+
 	}
 
 	@Override
 	public List<Account> getAllByAccount(Account acc) {
-		String jpql = "SELECT NEW Account(a.accountNumber, a.address, a.age, a.balance, a.city, a.email, a.employer, a.firstname, a.gender, a.lastname, a.state) FROM Account AS a WHERE 1=1 ";
+		String jpql = "SELECT NEW Account(a.accountNumber, a.address, a.age, a.balance, a.city, a.email, a.employer, a.firstname, a.gender, a.lastname, a.state, a.role) FROM Account AS a WHERE 1=1 ";
 		if (acc.getAddress() != null) {
 			jpql = jpql.concat(" AND LOWER(a.address) LIKE :add");
 		}
@@ -121,12 +138,12 @@ public class AccountDaoImpl implements AccountDao, UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-		Account acc = getAllByEmail(username);
+		Account acc = getAccountByEmail(username);
 		if (acc == null) {
 			throw new UsernameNotFoundException("not found");
 		}
 		Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
-		grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+		grantedAuthorities.add(new SimpleGrantedAuthority(acc.getRole()));
 		CurrentUser currentUser = new CurrentUser(username, acc.getPassword(), grantedAuthorities);
 		currentUser.setAccountNumber(acc.getAccountNumber());
 		currentUser.setFirstName(acc.getFirstname());
@@ -136,7 +153,7 @@ public class AccountDaoImpl implements AccountDao, UserDetailsService {
 	}
 
 	@Override
-	public Account getAllByEmail(String email) {
+	public Account getAccountByEmail(String email) {
 		try {
 			String jpql = "SELECT a FROM Account a WHERE a.email LIKE :aemail ";
 			Query query = entityManager.createQuery(jpql);

@@ -53,7 +53,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		http.cors().and().csrf().disable().authorizeRequests().antMatchers("/api/login").permitAll()
 				.antMatchers(HttpMethod.GET, "/", "/v2/api-docs", "/webjars/**", "/swagger-resources/**",
 						"/configuration/**", "/*.html", "/favicon.ico", "/**/*.html", "/**/*.css", "/**/*.js")
-				.permitAll().anyRequest().authenticated().and().exceptionHandling()
+				.permitAll().antMatchers("/api/**/account/**").hasRole("ADMIN").and().exceptionHandling()
 				.authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 

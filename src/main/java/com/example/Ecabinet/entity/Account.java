@@ -34,6 +34,8 @@ public class Account {
 	private String state;
 
 	private String password;
+	
+	private String role;
 
 	public long getAccountNumber() {
 		return accountNumber;
@@ -131,12 +133,22 @@ public class Account {
 		this.password = password;
 	}
 
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
+
 	public Account() {
 		super();
 	}
+	
+	
 
 	public Account(long accountNumber, String address, int age, long balance, String city, String email,
-			String employer, String firstname, String gender, String lastname, String state) {
+			String employer, String firstname, String gender, String lastname, String state,String role) {
 		super();
 		this.accountNumber = accountNumber;
 		this.balance = balance;
@@ -149,5 +161,6 @@ public class Account {
 		this.email = email;
 		this.city = city;
 		this.state = state;
+		this.role = role;
 	}
 }

@@ -17,7 +17,7 @@ public class JWTutil {
 
 	private final String JWT_SECRET = "secret";
 
-	private final long JWT_EXPIRATION = 1000 * 60 * 30;
+	private final long JWT_EXPIRATION = 1000 * 60 * 60 * 24;
 
 	public String generateToken(CurrentUser currentUser) {
 		Date now = new Date();
