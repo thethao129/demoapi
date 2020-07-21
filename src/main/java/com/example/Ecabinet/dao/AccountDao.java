@@ -3,6 +3,7 @@ package com.example.Ecabinet.dao;
 import java.util.List;
 
 import com.example.Ecabinet.entity.Account;
+import com.example.Ecabinet.entity.User;
 
 public interface AccountDao {
 	public void createAccount(Account account);
@@ -12,4 +13,5 @@ public interface AccountDao {
 	public List<Account> getAll();
 	public List<Account> getAllByAccount(Account acc);
 	public Account getAccountByEmail(String email);
+	public User getUserLogin(String username);
 }

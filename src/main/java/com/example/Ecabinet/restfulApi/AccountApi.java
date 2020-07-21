@@ -25,7 +25,7 @@ import com.example.Ecabinet.dao.AccountDao;
 import com.example.Ecabinet.dto.JwtResponse;
 import com.example.Ecabinet.entity.Account;
 import com.example.Ecabinet.entity.CurrentUser;
-import com.example.Ecabinet.entity.User;
+import com.example.Ecabinet.entity.UserDTO;
 import com.example.Ecabinet.jwt.JWTutil;
 
 import io.swagger.annotations.Api;
@@ -66,7 +66,7 @@ public class AccountApi {
 	}
 
 	@PostMapping(value = "/api/login")
-	public ResponseEntity<?> login(@RequestBody User user) {
+	public ResponseEntity<?> login(@RequestBody UserDTO user) {
 		Authentication authentication = authenticationManager
 				.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
 
@@ -78,7 +78,6 @@ public class AccountApi {
 
 	@PostMapping(value = "/api/create/account", produces = "application/json")
 	public ResponseEntity<Object> createAccount(@RequestBody Account account) {
-		account.setPassword(passwordEncoder.encode(account.getPassword()));
 		accountDao.createAccount(account);
 		// Create resource location
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
@@ -97,7 +96,6 @@ public class AccountApi {
 	@RequestMapping(value = "/api/delete/account/{id}", method = RequestMethod.DELETE, produces = "application/json")
 	public ResponseEntity<?> delete(@PathVariable long id) {
 		accountDao.deleteAccount(id);
-		;
 		return new ResponseEntity<>("Product deleted successfully", HttpStatus.OK);
 	}
 

@@ -14,7 +14,6 @@ public class CurrentUser extends User {
 
 	public CurrentUser(String username, String password, Collection<? extends GrantedAuthority> authorities) {
 		super(username, password, authorities);
-		// TODO Auto-generated constructor stub
 	}
 
 	public String getFirstName() {
